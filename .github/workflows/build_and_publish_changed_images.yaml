@@ -1,0 +1,41 @@
+name: Build & publish changed images
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  list_all_images:
+    runs-on: ubuntu-20.04
+    outputs:
+      image_names: ${{ steps.list_dockerfiles.outputs.image_names }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: list_dockerfiles
+        run: echo "::set-output name=image_names::$(ls *.Dockerfile | jq -R -s -c '[split("\n")[:-1][] | split(".")[0]]')"
+
+  build_and_publish_changed:
+    needs: list_all_images
+    runs-on: ubuntu-20.04
+    strategy:
+        matrix:
+            image_name: ${{ fromJson(needs.list_all_images.outputs.image_names) }}
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 2 # This is for changed-files.
+
+    - id: changes_to_image
+      uses: tj-actions/changed-files@v1.1.2
+      with:
+        files: |
+          ${{ matrix.image_name }}.Dockerfile
+
+    - uses: ./.github/actions/build-and-publish-image
+      if: ${{ steps.changes_to_image.outputs.any_changed == 'true' }}
+      with:
+        dockerfile_path: ${{ matrix.image_name }}.Dockerfile
+        github_personal_access_token: ${{ secrets.GITHUB_TOKEN }}
+        github_username: ${{ github.actor }}
+        image_tag: ghcr.io/itopia-inc/spaces-custom-images/${{ matrix.image_name }}:latest

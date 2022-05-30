@@ -1,0 +1,18 @@
+inputs:
+  dockerfile_path:
+    required: true
+  github_personal_access_token:
+    required: true
+  github_username:
+    required: true
+  image_tag:
+    required: true
+
+runs:
+  using: composite
+  steps:
+  - shell: bash
+    run: |
+      echo ${{ inputs.github_personal_access_token }} | docker login ghcr.io -u ${{ inputs.github_username }} --password-stdin
+      docker build -f ${{ inputs.dockerfile_path }} -t ${{ inputs.image_tag }} .
+      docker push ${{ inputs.image_tag }}
