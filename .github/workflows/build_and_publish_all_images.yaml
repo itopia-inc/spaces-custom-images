@@ -1,0 +1,31 @@
+name: Build & publish all images
+
+on:
+  schedule:
+    - cron: '0 13 * * MON' # Every Monday at 9AM Eastern Daylight Time
+  workflow_dispatch:
+
+jobs:
+  list_all_images:
+    runs-on: ubuntu-20.04
+    outputs:
+      image_names: ${{ steps.list_dockerfiles.outputs.image_names }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: list_dockerfiles
+        run: echo "::set-output name=image_names::$(ls *.Dockerfile | jq -R -s -c '[split("\n")[:-1][] | split(".")[0]]')"
+
+  build_and_publish_all:
+    needs: list_all_images
+    runs-on: ubuntu-20.04
+    strategy:
+        matrix:
+            image_name: ${{ fromJson(needs.list_all_images.outputs.image_names) }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ./.github/actions/build-and-publish-image
+      with:
+        dockerfile_path: ${{ matrix.image_name }}.Dockerfile
+        github_personal_access_token: ${{ secrets.GITHUB_TOKEN }}
+        github_username: ${{ github.actor }}
+        image_tag: ghcr.io/itopia-inc/spaces-custom-images/${{ matrix.image_name }}:latest
