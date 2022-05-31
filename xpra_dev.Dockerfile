@@ -35,7 +35,7 @@ RUN sudo apt-get update && sudo apt-get install -y \
   xvfb
 
 # Install Xpra server
-RUN mkdir -p /etc/xpra-dev && \
+RUN sudo mkdir -p /etc/xpra-dev && \
   cd /etc/xpra-dev && \
   git clone -b v4.3.3 --single-branch https://github.com/Xpra-org/xpra && \
   cd xpra && \
@@ -50,7 +50,7 @@ RUN sudo apt-get update && sudo apt-get install -y \
   uglifyjs
 
 # Install Xpra HTML5 client
-RUN mkdir -p /etc/xpra-dev && \
+RUN sudo mkdir -p /etc/xpra-dev && \
   cd /etc/xpra-dev && \
   git clone -b v5.0 --single-branch https://github.com/Xpra-org/xpra-html5 && \
   cd xpra-html5 && \
