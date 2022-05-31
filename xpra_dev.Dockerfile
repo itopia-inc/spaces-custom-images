@@ -9,7 +9,7 @@
 FROM ghcr.io/itopia-inc/spaces-images/spaces-ubuntu-nodejs-vscode:focal-18
 
 # Install Xpra server dependencies for Ubuntu 20.04
-RUN apt-get update && apt-get install -y \
+RUN sudo apt-get update && sudo apt-get install -y \
   cython3 \
   libgtk-3-dev \
   libsystemd-dev \
@@ -42,7 +42,7 @@ RUN mkdir -p /etc/xpra-dev && \
   sudo ./setup.py install
 
 # Install Xpra HTML5 client dependencies for Ubuntu 20.04
-RUN apt-get update && apt-get install -y \
+RUN sudo apt-get update && sudo apt-get install -y \
   brotli \
   gnome-backgrounds \
   libjs-jquery \
