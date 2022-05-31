@@ -25,7 +25,7 @@ RUN sudo apt-get update && sudo apt-get install -y \
   python-gi-dev \
   python3-cairo-dev \
   python3-dev \
-  python4-gi-cairo \
+  python3-gi-cairo \
   python3-opengl \
   python3-pil \
   python3-rencode \
