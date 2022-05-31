@@ -37,7 +37,7 @@ RUN sudo apt-get update && sudo apt-get install -y \
 # Install Xpra server
 RUN sudo mkdir -p /etc/xpra-dev && \
   cd /etc/xpra-dev && \
-  git clone -b v4.3.3 --single-branch https://github.com/Xpra-org/xpra && \
+  sudo git clone -b v4.3.3 --single-branch https://github.com/Xpra-org/xpra && \
   cd xpra && \
   sudo ./setup.py install
 
@@ -52,6 +52,6 @@ RUN sudo apt-get update && sudo apt-get install -y \
 # Install Xpra HTML5 client
 RUN sudo mkdir -p /etc/xpra-dev && \
   cd /etc/xpra-dev && \
-  git clone -b v5.0 --single-branch https://github.com/Xpra-org/xpra-html5 && \
+  sudo git clone -b v5.0 --single-branch https://github.com/Xpra-org/xpra-html5 && \
   cd xpra-html5 && \
   sudo ./setup.py install
